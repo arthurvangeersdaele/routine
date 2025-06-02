@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Day habits</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    /* Iridescent background */
+    body {
+      margin: 0;
+      font-family: 'Inter', system-ui, sans-serif;
+      height: 100vh;
+      background: linear-gradient(115deg, 
+          rgba(255, 255, 255, 0.8), 
+          rgba(255, 245, 250, 0.8), 
+          rgba(245, 255, 255, 0.8), 
+          rgba(255, 255, 240, 0.8));
+      background-size: 400% 400%;
+      animation: iridescentBackground 20s ease infinite;µ
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    @keyframes iridescent {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    h1 {
+      font-size: 2.5em;
+      margin: 1em 0 0.5em;
+      font-weight: 700;
+      color: #333;
+      text-align: center;
+    }
+
+    .columns{
+      display: flex;
+      justify-content: center;
+      gap: 0rem; /* optional spacing */
+    }
+
+    .note-container {
+      width: 50%;
+      height: calc(80vh - 5em);
+      background: #fbf9fa;
+      border-radius: 0 20px 20px 0;
+      overflow-y: auto;
+      padding: 1em;
+      margin:0 45px 0 0;
+      overflow: auto;          /* Enables scrolling */
+      scrollbar-width: none;   /* Firefox: hides scrollbar */
+      -ms-overflow-style: none;/* IE 10+ */
+      justify-content: center;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .idea-container {
+      display: flex;
+    flex-wrap: wrap;          /* Enables grid-like wrapping */
+    justify-content: center;  /* Centers the grid horizontally */
+    align-items: flex-start;  /* Aligns rows to the top */
+    gap: 1em;                 /* Space between items */
+    
+    /* Existing styles */
+    left: 0px;
+    width: 50%;
+    height: calc(80vh - 5em);
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    overflow-y: auto;
+    padding: 1em;
+    margin: 0 15px;
+    overflow: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    }
+
+    .main-container {
+      width: 100%;
+      height: calc(80vh - 5em);
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      overflow-y: auto;
+      padding: 1em;
+      margin:0px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+      overflow: auto;          /* Enables scrolling */
+      scrollbar-width: none;   /* Firefox: hides scrollbar */
+      -ms-overflow-style: none;/* IE 10+ */
+    }
+
+    .container::-webkit-scrollbar {
+      display: none;           /* Chrome, Safari and Edge */
+    }
+
+    .time-block {
+      display: flex;
+      align-items: center;
+      margin-bottom: 0.5em;
+      border-radius: 10px;
+    }
+
+    .time-block.current {
+/*      border: 2px solid #fff;*/
+/*      box-shadow: 0 0 15px 4px rgba(255, 255, 255, 0.8);*/
+      background-color: rgba(170, 255, 113, 0.3);
+    }
+
+    .time-block.current::before{
+      content: "▶";
+      color: #333;
+      text-align: right;
+      width:10px;
+      margin-left:-5px;
+      margin-right:-5px;
+      z-index: 2;
+    }
+
+    .time-label {
+      width: 80px;
+      padding: 0.4em;
+      border-radius: 10px;
+      color: white;
+      font-weight: bold;
+      text-align: center;
+      margin-right: 1em;
+      flex-shrink: 0;
+    }
+
+    .description {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.3);
+      border: none;
+      border-radius: 10px;
+      padding: 0.5em;
+      color: #333;
+      font-size: 1.2em;
+    }
+
+    .description:focus {
+      outline: none;
+      background: rgba(255, 255, 255, 0.6);
+    }
+
+    .description:empty:before {
+      content: attr(data-placeholder);
+      color: #999;
+      pointer-events: none;
+    }
+
+    .idea {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      
+      width: 150px;      /* Fixed square size */
+      height: 150px;     /* Fixed square size */
+      box-sizing: border-box;
+      padding: 10px;
+      margin:10px;
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .idea:hover{
+      transform:scale(1.2);
+    }
+
+    .idea h2 {
+      margin: 0 0 0px 0;
+      text-align: center;
+      font-size: 1.2rem;
+    }
+
+    .idea p {
+      flex-grow: 1;               /* Take maximal remaining vertical space */
+      font-size: 4rem;            /* Big emoji size */
+      margin: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      user-select: none;          /* Optional: prevent emoji text selection */
+    }
+
+    .notepad{
+      width:calc(100% - 20px);
+      height:calc(100% - 7em);
+      background-color: #fff7bb;
+      border-radius:5px;
+      padding:10px;
+    }
+
+@media (max-width: 768px) {
+  .no-mobile {
+    display: none !important;
+  }
+
+  .main-container {
+      width: 100%;
+      height: calc(90vh - 5em);
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(10px);
+      border-radius: 0px;
+      overflow-y: auto;
+      padding: 1em;
+      margin:0px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0);
+      overflow: auto;          /* Enables scrolling */
+      scrollbar-width: none;   /* Firefox: hides scrollbar */
+      -ms-overflow-style: none;/* IE 10+ */
+    }
+}
+
+    
+  </style>
+</head>
+<body>
+  <h1>Petite Routine</h1>
+
+  <div class="columns" id="columnsContainer">  
+    <div class="container note-container no-mobile" id="notesContainer">
+        <h2> Notes de la journée </h2>
+        <div class="notepad" contenteditable='true' spellcheck='false'> 
+        </div>
+
+    </div>
+
+    <div class="container main-container" id="timeContainer"></div>
+
+    <div class="container idea-container no-mobile" id="ideaContainer">
+      <div class='idea' data-status-time='8:30/10:00/12:30/14:00/16:00/18:00'>
+        <h2> Boire de l'eau </h2>
+        <p> 💧 </p>
+      </div>
+      <div class='idea' data-status-time='8:30/10:00/12:30/14:00/16:00/18:00'>
+        <h2> S'étirer </h2>
+        <p> 🤸 </p>
+      </div>
+      <div class='idea' data-status-time='8:30/10:00/12:30/14:00/16:00/18:00'>
+        <h2> Faire une pause </h2>
+        <p> ⏸️ </p>
+      </div>
+      <div class='idea' data-status-time='8:30/10:00/12:30/14:00/16:00/18:00'>
+        <h2> Faire un tour dehors </h2>
+        <p> 🏞️ </p>
+      </div>
+    </div>
+    
+
+  </div>
+<script>
+  const container = document.getElementById('timeContainer');
+  const colors = getTimeMappedColors();
+
+  const now = new Date();
+  const currentHour = now.getHours();
+  const currentMinute = now.getMinutes();
+  const nearestHalfHour = currentMinute >= 30 ? 30 : 0;
+  const currentTimeString = `${currentHour.toString().padStart(2, '0')}:${nearestHalfHour.toString().padStart(2, '0')}`;
+
+  let currentBlock = null;
+  const habits = {
+  '00:00': '🌙 ZzZzz',
+  '00:30': '🌙 ZzZzz',
+  '01:00': '🌙 ZzZzz',
+  '01:30': '🌙 ZzZzz',
+  '02:00': '🌙 ZzZzz',
+  '02:30': '🌙 ZzZzz',
+  '03:00': '🌙 ZzZzz',
+  '03:30': '🌙 ZzZzz',
+  '04:00': '🌙 ZzZzz',
+  '04:30': '🌙 ZzZzz',
+  '05:00': '🌙 ZzZzz',
+  '05:30': '🌙 ZzZzz',
+  '06:00': '🌙 ZzZzz',
+  '06:30': '🌙 ZzZzz',
+  '07:00': '🌅 Réveil, toilette, douche',
+  '07:30': '🫧 Rangement de la chambre, commu, etc.',
+  '08:00': '🧇 Petit déjeuner et départ',
+  '08:30': '🖥️ Gestions des mails et timesheets',
+  '09:00': '🖥️ Réponses aux mails',
+  '09:30': '🖨️ Impression du jour et services',
+  '10:00': '🖨️ Impression du jour et services',
+  '10:30': '🖥️ Administratif: AO, notes de frais, etc.',
+  '11:00': '💭 Tâches spécifiques (MS Todo)',
+  '11:30': '💭 Tâches spécifiques (MS Todo)',
+  '12:00': '☀️ Pause de midi',
+  '12:30': '💭 Tâches spécifiques (MS Todo)',
+  '13:00': '💭 Tâches spécifiques (MS Todo)',
+  '13:30': '💭 Tâches spécifiques (MS Todo)',
+  '14:00': '💭 Tâches spécifiques (MS Todo)',
+  '14:30': '💭 Tâches spécifiques (MS Todo)',
+  '15:00': '💭 Tâches spécifiques (MS Todo)',
+  '15:30': '💭 Tâches spécifiques (MS Todo)', 
+  '16:00': '🖥️ Gestion des mails et timesheets',
+  '16:30': '🖥️ Gestion des mails et timesheets',
+  '17:00': '🖥️ Planification des jours suivants',
+  '17:30': '🎈 Temps personnel',
+  '18:00': '🎈 Temps personnel',
+  '18:30': '🏡 Retour à la maison',
+  '19:00': '🍽️ Cuisiner et souper',
+  '19:30': '🍽️ Cuisiner et souper',
+  '20:00': '🪪 Administratif personnel',
+  '20:30': '🎈 Temps personnel',
+  '21:00': '🎈 Temps personnel',
+  '21:30': '🎈 Temps personnel',
+  '22:00': '🛌 Au dodo',
+  '22:30': '🌙 ZzZzz',
+  '23:00': '🌙 ZzZzz',
+  '23:30': '🌙 ZzZzz'
+};
+
+  for (let h = 0; h < 24; h++) {
+    for (let m = 0; m <= 30; m += 30) {
+      const timeStr = `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`;
+      const block = document.createElement('div');
+      block.className = 'time-block';
+
+      const label = document.createElement('div');
+      label.className = 'time-label';
+      const index = Math.floor((h * 60 + m) / 60 * colors.length / 24);
+      label.style.backgroundColor = colors[index];
+      label.textContent = timeStr;
+
+      const desc = document.createElement('div');
+      desc.className = 'description';
+      desc.contentEditable = true;
+      desc.spellCheck = false;
+      desc.setAttribute('data-placeholder', 'Choose a task for today');
+      desc.innerText = habits[timeStr];
+
+      block.appendChild(label);
+      block.appendChild(desc);
+      container.appendChild(block);
+
+      if (timeStr === currentTimeString) {
+        currentBlock = block;
+        block.classList.add('current');
+      }
+    }
+  }
+
+  if (currentBlock) {
+    // Delay scrolling slightly to ensure rendering is complete
+    setTimeout(() => {
+      currentBlock.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 100);
+  }
+
+function getTimeMappedColors() {
+  const colors = [
+  // Midnight to dawn (dark blues)
+  '#011b3e', '#011b3e', '#022245', '#00264b', '#00264b', '#002c4f',
+  '#002c4f', '#003152', '#003f5e', '#00405e', '#064f72', '#0b7895',
+
+  // Sunrise to morning (blues to cyan)
+  '#0b7895', '#45adba', '#45adba', '#aae0c8', '#aae0c8', '#aae0c8',
+
+  // Midday zone (light blues and yellows — elongated)
+  '#cfdf8e', '#cfdf8e', '#f2d770', '#f3d672', '#fec76c', '#fec76c',
+  '#fec460', '#fec460', '#fcc05e', '#fdc05e', '#f7ab57', '#f7ab57',
+  '#f48969', '#f4896a',
+
+  // Afternoon to evening (warm to cool down)
+  '#dd717e', '#df717d', '#954687', '#954687', '#542680', '#53277e',
+
+  // Nightfall to night (deep blues and purples)
+  '#361b71', '#351b72', '#292369', '#262468', '#131d58', '#0b1b51',
+  '#02184a', '#011b3e', '#011b3e', '#000000', 
+];
+
+
+  return colors;
+}
+
+
+const idea = document.querySelector('.idea');
+const times = idea.dataset.statusTime.split('/');
+// Example: check if current time matches one of the scheduled times
+// Then set display:
+idea.style.display = 'flex'; // or 'none' to hide
+
+</script>
+
+</body>
+</html>
+
+<!--
+
+  file:///C:/Users/avangeersdae/OneDrive%20-%20UCL/UCL/5)%20Projets%20personnels/Day%20habits/index.html 
+
+-->
+
