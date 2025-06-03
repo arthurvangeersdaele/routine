@@ -39,7 +39,17 @@
       color: #333;
       text-align: center;
     }
-
+    .alert{
+      position: fixed;
+      top:0; 
+      left:0; 
+      width:100vw;
+      font-size: 1em;
+      text-align: center;
+      background-color: rgb(223, 146, 154);
+      color: rgb(158, 39, 42);
+      border-bottom: solid 2px rgb(158, 39, 42);
+    }
     .columns{
       display: flex;
       justify-content: center;
@@ -62,26 +72,45 @@
     }
 
     .idea-container {
+      position: relative;
       display: flex;
-    flex-wrap: wrap;          /* Enables grid-like wrapping */
-    justify-content: center;  /* Centers the grid horizontally */
-    align-items: flex-start;  /* Aligns rows to the top */
-    gap: 1em;                 /* Space between items */
-    
-    /* Existing styles */
-    left: 0px;
-    width: 50%;
-    height: calc(80vh - 5em);
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: 20px;
-    overflow-y: auto;
-    padding: 1em;
-    margin: 0 15px;
-    overflow: auto;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
+      flex-wrap: wrap;          /* Enables grid-like wrapping */
+      justify-content: center;  /* Centers the grid horizontally */
+      align-items: flex-start;  /* Aligns rows to the top */
+      gap: 1em;                 /* Space between items */
+      
+      /* Existing styles */
+      width: 50%;
+      height: calc(80vh - 5em);
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 20px;
+      
+      padding: 1em;
+      margin: 0 15px;
+      
+      scrollbar-width: none;
+      -ms-overflow-style: none;
     }
 
+    .scoreContainer {
+      text-align: center;
+      position: absolute;
+      bottom: 0px;
+      font-size: 5em;
+      min-width: 100%;
+      color:#333;
+    }
+
+    .scoreContainer::before {
+      content: 'Day score';
+      position: absolute;   /* Needed to apply top/left */
+      left: 50%;  
+      top:-25px;   
+      transform: skewX(-15deg) translate(-50%, 0);
+      font-size: 0.3em;
+      background-color:#ccc;
+      color: #fefefe;          /* Optional: differentiate it visually */
+    }
     .main-container {
       width: 100%;
       height: calc(80vh - 5em);
@@ -226,6 +255,7 @@
   </style>
 </head>
 <body>
+  <div id='alert' class ="alert no-mobile"  onclick="localStorage.clear();window.location.reload();">   </div>
   <h1>Petite Routine</h1>
 
   <div class="columns" id="columnsContainer">  
@@ -247,7 +277,7 @@
         <h2> S'étirer </h2>
         <p> 🤸 </p>
       </div>
-      <div class='idea' data-status-time='8:30/10:00/12:30/14:00/16:00/18:00' data-status-score='10' onclick="clickIdea(this);">
+      <div class='idea' data-status-time='10:00/14:00/16:00' data-status-score='10' onclick="clickIdea(this);">
         <h2> Faire une pause </h2>
         <p> ⏸️ </p>
       </div>
@@ -255,6 +285,8 @@
         <h2> Faire un tour dehors </h2>
         <p> 🏞️ </p>
       </div>
+
+      <div class="scoreContainer" id = 'dayScore' data-status-field-id = 'dayscore'> 0 </div>
     </div>
     
 
@@ -269,7 +301,8 @@
   const nearestHalfHour = currentMinute >= 30 ? 30 : 0;
   const currentTimeString = `${currentHour.toString().padStart(2, '0')}:${nearestHalfHour.toString().padStart(2, '0')}`;
 
-  let dayScore = 0;
+  var dayScore = 0;;
+  localAlert("Warning: This content is public. \n This page uses local storage only. You can refresh it but not save it or get its content on other devices.");
 
   let currentBlock = null;
   const habits = {
@@ -369,12 +402,42 @@
   if (currentBlock) {
     setTimeout(() => {
       currentBlock.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      dayScore = parseInt(document.getElementById('dayScore').textContent)
     }, 100);
   }
 }
 
 // Initial render
 renderTimeBlocks();
+
+function checkIdeaOverflow() {
+  const parent = document.getElementById('ideaContainer');
+  const ideas = document.querySelectorAll('.idea'); // Get all .idea elements
+
+  if (!parent || ideas.length === 0) return;
+
+  const parentRect = parent.getBoundingClientRect();
+
+  ideas.forEach(idea => {
+    const ideaRect = idea.getBoundingClientRect();
+
+    // Optional: mark visible elements (for debug)
+
+    const isOverflowing =
+      ideaRect.bottom > parentRect.bottom - 100 ||
+      ideaRect.top < parentRect.top ||
+      ideaRect.left < parentRect.left ||
+      ideaRect.right > parentRect.right;
+
+    idea.style.opacity = isOverflowing ? 0 : 1;
+  });
+}
+
+// Run when the page loads, and on scroll/resize
+window.addEventListener('DOMContentLoaded', checkIdeaOverflow);
+window.addEventListener('resize', checkIdeaOverflow);
+window.addEventListener('scroll', checkIdeaOverflow, true);
+
 
 // local data restore 
 window.addEventListener('DOMContentLoaded', () => {
@@ -421,19 +484,20 @@ function getTimeMappedColors() {
 
 function clickIdea(idea){
   idea.style.display = 'none';
-  actionScore =  idea.dataset.statusScore.toInt;
+  let actionScore =   parseInt(idea.dataset.statusScore);
   dayScoreAdd(actionScore);
 }
 
 function dayScoreAdd(n){
   //refresh dayscore
-  //store dayscore in json
+  dayScore += n;
+  document.getElementById("dayScore").textContent = dayScore;
 }
 
 function snapshot() {
     const data = {};
 
-    document.querySelectorAll('[contenteditable][data-status-field-id]').forEach(el => {
+    document.querySelectorAll('[data-status-field-id]').forEach(el => {
         const id = el.getAttribute('data-status-field-id');
         data[id] = el.innerText.trim();
     });
@@ -443,11 +507,22 @@ function snapshot() {
 }
 
 // Run every 10s
-setInterval(snapshot, 10000);
+setInterval(snapshot, 1000);
 
+function localAlert(text){
+  document.getElementById('alert').style.display= 'block';
+  document.getElementById('alert').textContent = text;
+  setTimeout(() => {
+      document.getElementById('alert').style.display= 'none';
+    }, 5000);
+}
+document.addEventListener('keydown', function(e) {
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') {
+        e.preventDefault();
+        localAlert("Saving the page is disabled.");
 
-// Run every 10 seconds
-setInterval(snapshot, 10000);
+    }
+});
 
 
 // test
