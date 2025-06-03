@@ -231,7 +231,7 @@
   <div class="columns" id="columnsContainer">  
     <div class="container note-container no-mobile" id="notesContainer">
         <h2> Notes de la journée </h2>
-        <div class="notepad" contenteditable='true' spellcheck='false'> 
+        <div class="notepad" contenteditable='true' spellcheck='false' data-status-field-id = 'notes'> 
         </div>
 
     </div>
@@ -352,6 +352,7 @@
       desc.contentEditable = true;
       desc.spellCheck = false;
       desc.setAttribute('data-placeholder', 'Choose a task for today');
+      desc.setAttribute('data-status-field-id', timeStr);
       desc.innerText = habits[timeStr] || '';
 
       block.appendChild(label);
