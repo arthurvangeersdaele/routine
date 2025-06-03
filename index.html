@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Day habits</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="manifest" href="/website/manifest.json">
+  <link rel="apple-touch-icon" href="/icons/icon-192.png">
   <style>
     /* Iridescent background */
     body {
@@ -237,19 +239,19 @@
     <div class="container main-container" id="timeContainer"></div>
 
     <div class="container idea-container no-mobile" id="ideaContainer">
-      <div class='idea' data-status-time='8:30/10:00/12:30/14:00/16:00/18:00'>
+      <div class='idea' data-status-time='8:30/10:00/12:30/14:00/16:00/18:00' data-status-score='10' onclick="clickIdea(this);">
         <h2> Boire de l'eau </h2>
         <p> 💧 </p>
       </div>
-      <div class='idea' data-status-time='8:30/10:00/12:30/14:00/16:00/18:00'>
+      <div class='idea' data-status-time='8:30/10:00/12:30/14:00/16:00/18:00' data-status-score='10' onclick="clickIdea(this);">
         <h2> S'étirer </h2>
         <p> 🤸 </p>
       </div>
-      <div class='idea' data-status-time='8:30/10:00/12:30/14:00/16:00/18:00'>
+      <div class='idea' data-status-time='8:30/10:00/12:30/14:00/16:00/18:00' data-status-score='10' onclick="clickIdea(this);">
         <h2> Faire une pause </h2>
         <p> ⏸️ </p>
       </div>
-      <div class='idea' data-status-time='8:30/10:00/12:30/14:00/16:00/18:00'>
+      <div class='idea' data-status-time='8:30/10:00/12:30/14:00/16:00/18:00' data-status-score='10' onclick="clickIdea(this);">
         <h2> Faire un tour dehors </h2>
         <p> 🏞️ </p>
       </div>
@@ -266,6 +268,8 @@
   const currentMinute = now.getMinutes();
   const nearestHalfHour = currentMinute >= 30 ? 30 : 0;
   const currentTimeString = `${currentHour.toString().padStart(2, '0')}:${nearestHalfHour.toString().padStart(2, '0')}`;
+
+  let dayScore = 0;
 
   let currentBlock = null;
   const habits = {
@@ -319,6 +323,18 @@
   '23:30': '🌙 ZzZzz'
 };
 
+ function renderTimeBlocks() {
+  container.innerHTML = ''; // Clear previous blocks
+  const now = new Date();
+  const currentTimeString = `${now.getHours().toString().padStart(2, '0')}:${(now.getMinutes() < 30 ? 0 : 30).toString().padStart(2, '0')}`;
+
+  const idea = document.querySelector('.idea');
+  if (idea.dataset.statusTime.split('/').includes(currentTimeString)) {
+      idea.style.display = "flex";
+  }
+
+  let currentBlock = null;
+
   for (let h = 0; h < 24; h++) {
     for (let m = 0; m <= 30; m += 30) {
       const timeStr = `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`;
@@ -336,7 +352,7 @@
       desc.contentEditable = true;
       desc.spellCheck = false;
       desc.setAttribute('data-placeholder', 'Choose a task for today');
-      desc.innerText = habits[timeStr];
+      desc.innerText = habits[timeStr] || '';
 
       block.appendChild(label);
       block.appendChild(desc);
@@ -350,11 +366,17 @@
   }
 
   if (currentBlock) {
-    // Delay scrolling slightly to ensure rendering is complete
     setTimeout(() => {
       currentBlock.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }, 100);
   }
+}
+
+// Initial render
+renderTimeBlocks();
+
+// Update every minute
+setInterval(renderTimeBlocks, 60000);
 
 function getTimeMappedColors() {
   const colors = [
@@ -383,11 +405,16 @@ function getTimeMappedColors() {
 }
 
 
-const idea = document.querySelector('.idea');
-const times = idea.dataset.statusTime.split('/');
-// Example: check if current time matches one of the scheduled times
-// Then set display:
-idea.style.display = 'flex'; // or 'none' to hide
+function clickIdea(idea){
+  idea.style.display = 'none';
+  actionScore =  idea.dataset.statusScore.toInt;
+  dayScoreAdd(actionScore);
+}
+
+function dayScoreAdd(n){
+  //refresh dayscore
+  //store dayscore in json
+}
 
 </script>
 
