@@ -269,11 +269,11 @@
     <div class="container main-container" id="timeContainer"></div>
 
     <div class="container idea-container no-mobile" id="ideaContainer">
-      <div class='idea' data-status-time='8:30/10:00/12:30/14:00/16:00/18:00' data-status-day = "Lundi/Jeudi" data-status-score='15' onclick="clickIdea(this);">
+      <div class='idea' data-status-time="" data-status-day = "Lundi/Jeudi" data-status-score='15' onclick="clickIdea(this);">
         <h2> Remercier un ami </h2>
         <p> 💖 </p>
       </div>
-      <div class='idea' data-status-time='8:30/10:00/12:30/14:00/16:00/18:00' data-status-day = "Mercredi" data-status-score='30' onclick="clickIdea(this);">
+      <div class='idea' data-status-time="" data-status-day = "Mercredi" data-status-score='30' onclick="clickIdea(this);">
         <h2> Wednesday Coffee </h2>
         <p> 🍵 </p>
       </div>
@@ -377,12 +377,19 @@
 
   const ideas = document.querySelectorAll('.idea');
   ideas.forEach(idea => {
-    if (idea.dataset.statusTime.split('/').includes(currentTimeString) && idea.dataset.statusDay.split('/').includes(currentWeekday)) {
+    if(idea.dataset.statusDay.includes(currentWeekday)){
+      let statusTime = idea.dataset.statusTime || "";
+      if (
+        statusTime.split('/').includes(currentTimeString) || 
+        statusTime === ""
+      ) {
         idea.style.display = "flex";
-    }
-    else{
-      idea.style.display = "none";
-    }
+      } else {
+        idea.style.display = "none";
+      }
+} else {
+        idea.style.display = "none";
+      }
   });
 
   let currentBlock = null;
