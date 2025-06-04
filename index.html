@@ -269,30 +269,72 @@
     <div class="container main-container" id="timeContainer"></div>
 
     <div class="container idea-container no-mobile" id="ideaContainer">
-      <div class='idea' data-status-time="" data-status-day = "Lundi/Jeudi" data-status-score='15' onclick="clickIdea(this);">
+      <div class='idea' 
+           data-status-field-id='i1' 
+           data-status-done='' 
+           data-status-time='' 
+           data-status-day='Lundi/Jeudi' 
+           data-status-score='15' 
+           onclick="clickIdea(this);">
         <h2> Remercier un ami </h2>
         <p> 💖 </p>
       </div>
-      <div class='idea' data-status-time="" data-status-day = "Mercredi" data-status-score='30' onclick="clickIdea(this);">
+
+      <div class='idea' 
+           data-status-field-id='i2' 
+           data-status-done='' 
+           data-status-time='' 
+           data-status-day='Mercredi' 
+           data-status-score='30' 
+           onclick="clickIdea(this);">
         <h2> Wednesday Coffee </h2>
         <p> 🍵 </p>
       </div>
-      <div class='idea' data-status-time='8:30/10:00/12:30/14:00/16:00/18:00' data-status-day = "Lundi/Mardi/Mercredi/Jeudi/Vendredi/Samedi/Dimanche" data-status-score='10' onclick="clickIdea(this);">
+
+      <div class='idea' 
+           data-status-field-id='i2' 
+           data-status-done='' 
+           data-status-time='8:30/10:00/12:30/14:00/16:00/18:00' 
+           data-status-day='Lundi/Mardi/Mercredi/Jeudi/Vendredi/Samedi/Dimanche' 
+           data-status-score='10' 
+           onclick="clickIdea(this);">
         <h2> Boire de l'eau </h2>
         <p> 💧 </p>
       </div>
-      <div class='idea' data-status-time='8:30/10:00/12:30/14:00/16:00/18:00' data-status-day = "Lundi/Mardi/Mercredi/Jeudi/Vendredi/Samedi/Dimanche" data-status-score='10' onclick="clickIdea(this);">
+
+      <div class='idea' 
+           data-status-field-id='' 
+           data-status-done='' 
+           data-status-time='8:30/10:00/12:30/14:00/16:00/18:00' 
+           data-status-day='Lundi/Mardi/Mercredi/Jeudi/Vendredi/Samedi/Dimanche' 
+           data-status-score='10' 
+           onclick="clickIdea(this);">
         <h2> S'étirer </h2>
         <p> 🤸 </p>
       </div>
-      <div class='idea' data-status-time='10:00/14:00/16:00' data-status-day = "Lundi/Mardi/Mercredi/Jeudi/Vendredi/Samedi/Dimanche" data-status-score='10' onclick="clickIdea(this);">
+
+      <div class='idea' 
+           data-status-field-id='' 
+           data-status-done='' 
+           data-status-time='10:00/14:00/16:00' 
+           data-status-day='Lundi/Mardi/Mercredi/Jeudi/Vendredi/Samedi/Dimanche' 
+           data-status-score='10' 
+           onclick="clickIdea(this);">
         <h2> Faire une pause </h2>
         <p> ⏸️ </p>
       </div>
-      <div class='idea' data-status-time='8:30/10:00/12:30/14:00/16:00/18:00' data-status-day = "Lundi/Mardi/Mercredi/Jeudi/Vendredi/Samedi/Dimanche" data-status-score='10' onclick="clickIdea(this);">
+
+      <div class='idea' 
+           data-status-field-id='' 
+           data-status-done='' 
+           data-status-time='8:30/10:00/12:30/14:00/16:00/18:00' 
+           data-status-day='Lundi/Mardi/Mercredi/Jeudi/Vendredi/Samedi/Dimanche' 
+           data-status-score='10' 
+           onclick="clickIdea(this);">
         <h2> Faire un tour dehors </h2>
         <p> 🏞️ </p>
       </div>
+
 
       <div class="scoreContainer" id = 'dayScore' data-status-field-id = 'dayscore'> 0 </div>
     </div>
@@ -307,7 +349,7 @@
   const currentHour = now.getHours();
   const currentMinute = now.getMinutes();
   const nearestHalfHour = currentMinute >= 30 ? 30 : 0;
-  const currentTimeString = `${currentHour.toString().padStart(2, '0')}:${nearestHalfHour.toString().padStart(2, '0')}`;
+  let currentTimeString = `${currentHour.toString().padStart(2, '0')}:${nearestHalfHour.toString().padStart(2, '0')}`;
   const weekdayIndex = now.getDay(); // Sunday = 0, Monday = 1, ..., Saturday = 6
 
   const weekdays = ["Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"];
@@ -373,11 +415,14 @@
  function renderTimeBlocks() {
   container.innerHTML = ''; // Clear previous blocks
   const now = new Date();
-  const currentTimeString = `${now.getHours().toString().padStart(2, '0')}:${(now.getMinutes() < 30 ? 0 : 30).toString().padStart(2, '0')}`;
-
+  currentTimeString_tmp = `${now.getHours().toString().padStart(2, '0')}:${(now.getMinutes() < 30 ? 0 : 30).toString().padStart(2, '0')}`;
+  if(currentTimeString_tmp !== currentTimeString){
+    undoHourlyIdeas();
+  }
+  currentTimeString = currentTimeString_tmp;
   const ideas = document.querySelectorAll('.idea');
   ideas.forEach(idea => {
-    if(idea.dataset.statusDay.includes(currentWeekday)){
+    if(idea.dataset.statusDay.includes(currentWeekday) && !idea.dataset.statusDone.includes('done') ){
       let statusTime = idea.dataset.statusTime || "";
       if (
         statusTime.split('/').includes(currentTimeString) || 
@@ -509,9 +554,24 @@ function getTimeMappedColors() {
 
 
 function clickIdea(idea){
+  idea.setAttribute('data-status-done', 'done');
   idea.style.display = 'none';
   let actionScore =   parseInt(idea.dataset.statusScore);
   dayScoreAdd(actionScore);
+}
+
+function undoHourlyIdeas(){
+    const ideas = document.querySelectorAll('.idea');
+    ideas.forEach(idea => {
+      if(idea.dataset.statusDay.includes(currentWeekday)){
+        let statusTime = idea.dataset.statusTime || "";
+        if (
+          statusTime.split('/').includes(currentTimeString)
+        ) {
+          idea.setAttribute('data-status-done', '');
+        }
+      }
+    });
 }
 
 function dayScoreAdd(n){
