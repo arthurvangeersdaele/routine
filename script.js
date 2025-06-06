@@ -191,6 +191,24 @@ function scrollToCurrentHabit(){
 
 
 // functions - events listeners 
+function listenToTouch(componentId, callback) {
+  const element = document.getElementById(componentId);
+  if (!element) {
+    console.warn(`Element with ID '${componentId}' not found.`);
+    return;
+  }
+  element.ontouchstart = function(event) {
+    element.classList.add("touched");
+  };
+  element.ontouchend = function(event) {
+    element.classList.remove("touched");
+  };
+}
+
+listenToTouch('resetButton');
+listenToTouch('saveButton');
+listenToTouch('authorButton');
+
 
 function listenToScroll(componentId, callback) {
   const element = document.getElementById(componentId);
