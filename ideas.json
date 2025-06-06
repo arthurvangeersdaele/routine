@@ -1,5 +1,15 @@
 [
   {
+    "title": "Quitter cette appli",
+    "emoji": "🚫",
+    "done": false,
+    "type":"daily",
+    "time": "",
+    "day": "Samedi/Dimanche",
+    "day": "",
+    "score": 15
+  },
+  {
     "title": "Remercier un ami",
     "emoji": "💖",
     "done": false,
@@ -18,12 +28,12 @@
     "score": 30
   },
   {
-    "title": "Découvrir des musiques",
-    "emoji": "🎼",
+    "title": "Fouiller spotify",
+    "emoji": "🎶",
     "done": false,
-    "type":"hourly",
-    "time": "12:30/16:00/16:30/17:30",
-    "day": "",
+    "type":"daily",
+    "time": "",
+    "day": "Lundi/Mardi/Mercredi/Jeudi/Vendredi",
     "score": 15
   },
   {
@@ -57,9 +67,9 @@
     "title": "Faire 20 pompes",
     "emoji": "💪",
     "done": false,
-    "type":"hourly",
-    "time": "10:00/12:30/14:00/16:00",
-    "day": "Lundi/Mardi/Mercredi/Jeudi/Vendredi/Samedi/Dimanche",
+    "type":"daily",
+    "time": "",
+    "day": "Lundi/Mardi/Mercredi/Jeudi/Vendredi",
     "score": 10
   },
   {

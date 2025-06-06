@@ -1,7 +1,7 @@
 - click to validate or enhance actions
-- add favicon
-- file memory or note saving button on reload (for desktop only)
-- auto reload on 00:30 step for automatic permanent display (for desktop only)
-- local encryption for GitHub public hosting (means password implementation) 
-- action enhancement or validation could upgrade a scoring ! -- store it accross the days
+- reset button 
+- help center button
+- daily mood tracker (pop up every 2hr)
+- README
+- log-to-GitHub button to allows pushing daily score and logs for habit tracking ? 
 - define routines for differnet days of the week ? (ex: lab cleaning on friday)
