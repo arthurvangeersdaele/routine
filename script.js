@@ -31,6 +31,13 @@ const currentMinute = now.getMinutes();
 const nearestHalfHour = currentMinute >= 30 ? 30 : 0;
 let currentTimeString = `${currentHour.toString().padStart(2, '0')}:${nearestHalfHour.toString().padStart(2, '0')}`;// currentTimeString - format 00:00
 
+// global variables - parameters
+let paramActions = {
+  'resetButton': resetLocalStorage,
+  'gitHubButton': goToGitHub, 
+  'readMeButton': goToReadMe
+}
+
 
 // functions - fetching data for easy maintaining
 fetch('./time_colors.json')
@@ -123,11 +130,9 @@ function renderIdeas() {
   });
 
   // adding end of grid spacer
-  for (let i = 0; i < 5; i++) {
-    const spacer = document.createElement('div');
-    spacer.classList.add('spacer');
-    container.appendChild(spacer);
-  }
+  const spacer = document.createElement('div');
+  spacer.classList.add('spacer');
+  container.appendChild(spacer);
 }
 
 // functions - time update dynamics 
@@ -295,7 +300,7 @@ function refreshDayScore(){
 
 
 
-// page local storage (save locally)
+// functions - page local storage (save locally)
 function saveCurrentState() {
     const data = {};
 
@@ -311,7 +316,7 @@ function saveCurrentState() {
 }
 
 function reloadSavedState(){
-  window.addEventListener('DOMContentLoaded', () => {
+  
     const saved = localStorage.getItem('snapshot');
     if (!saved) return;
 
@@ -323,7 +328,49 @@ function reloadSavedState(){
 
     dayScore = data['day-score'];
     refreshDayScore();
-  });
+  
 }
 
-reloadSavedState();
+window.addEventListener('DOMContentLoaded', () => {
+  reloadSavedState();
+});
+
+function resetLocalStorage(){
+    const saved = localStorage.getItem('snapshot');
+    if (!saved) return;
+
+    const data = JSON.parse(saved);
+    
+    let notepad = document.getElementById("notepad");
+    notepad.innerText = '';
+
+
+    dayScore = 0;
+
+    refreshDayScore();
+    saveCurrentState();
+}
+
+// functions - external functions 
+
+function goToGitHub() {
+  window.open("https://github.com/arthurvangeersdaele/routine", "_blank");
+}
+
+function goToReadMe() {
+  window.open("https://github.com/arthurvangeersdaele/routine/blob/main/README.md", "_blank");
+}
+
+// functions - parameter buttons function association 
+function associateParamActions() {
+  for (const [buttonId, actionFn] of Object.entries(paramActions)) {
+    const button = document.getElementById(buttonId);
+    if (button) {
+      button.onclick = actionFn;
+    } else {
+      console.warn(`Button with id "${buttonId}" not found.`);
+    }
+  }
+}
+
+setTimeout(associateParamActions, 1000);
