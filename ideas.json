@@ -10,12 +10,21 @@
   },
   {
     "title": "Wednesday Coffee",
-    "emoji": "🍵",
+    "emoji": "🎥",
     "done": false,
     "type":"daily",
     "time": "",
     "day": "Mercredi",
     "score": 30
+  },
+  {
+    "title": "Prendre un café",
+    "emoji": "🍵",
+    "done": false,
+    "type":"hourly",
+    "time": "08:30",
+    "day": "",
+    "score": 10
   },
   {
     "title": "Boire de l'eau",
@@ -32,6 +41,15 @@
     "done": false,
     "type":"hourly",
     "time": "8:30/10:00/12:30/14:00/16:00/16:30/18:00",
+    "day": "Lundi/Mardi/Mercredi/Jeudi/Vendredi/Samedi/Dimanche",
+    "score": 10
+  },
+  {
+    "title": "Faire 20 pompes",
+    "emoji": "💪",
+    "done": false,
+    "type":"hourly",
+    "time": "10:00/12:30/14:00/16:00",
     "day": "Lundi/Mardi/Mercredi/Jeudi/Vendredi/Samedi/Dimanche",
     "score": 10
   },
