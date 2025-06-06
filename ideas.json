@@ -18,6 +18,15 @@
     "score": 30
   },
   {
+    "title": "Découvrir des musiques",
+    "emoji": "🎼",
+    "done": false,
+    "type":"hourly",
+    "time": "12:30/16:00/16:30/17:30",
+    "day": "",
+    "score": 15
+  },
+  {
     "title": "Prendre un café",
     "emoji": "🍵",
     "done": false,
