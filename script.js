@@ -179,7 +179,7 @@ function highlightCurrentHabit(){
   timeLabels.forEach(label => {
     const habit = label.closest('.habit');
     if (habit) {
-      habit.classList.remove('highlighted-habit');
+      habit.classList.remove('current-habit');
       if (label.textContent.trim() === currentTimeString) {
         habit.classList.add('current-habit');
       }
