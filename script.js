@@ -23,12 +23,12 @@ const hourColors = [
 ];
 
 // global variables - time management
-const now = new Date();
+let now = new Date();
 const weekdays = ["Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"];
 const currentWeekday = weekdays[now.getDay()];
-const currentHour = now.getHours();
-const currentMinute = now.getMinutes();
-const nearestHalfHour = currentMinute >= 30 ? 30 : 0;
+let currentHour = now.getHours();
+let currentMinute = now.getMinutes();
+let nearestHalfHour = currentMinute >= 30 ? 30 : 0;
 let currentTimeString = `${currentHour.toString().padStart(2, '0')}:${nearestHalfHour.toString().padStart(2, '0')}`;// currentTimeString - format 00:00
 
 // global variables - parameters
@@ -138,6 +138,10 @@ function renderIdeas() {
 // functions - time update dynamics 
 
 function refreshTimeString(){
+  now = new Date();
+  currentHour = now.getHours();
+  currentMinute = now.getMinutes();
+  nearestHalfHour = currentMinute >= 30 ? 30 : 0;
   currentTimeString = `${currentHour.toString().padStart(2, '0')}:${nearestHalfHour.toString().padStart(2, '0')}`;
 }
 
