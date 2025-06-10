@@ -136,6 +136,11 @@ function renderIdeas() {
 }
 
 // functions - time update dynamics 
+
+function refreshTimeString(){
+  currentTimeString = `${currentHour.toString().padStart(2, '0')}:${nearestHalfHour.toString().padStart(2, '0')}`;
+}
+
 function initClock() {
   setDayTitle();
   scrollToCurrentHabit();
@@ -152,6 +157,7 @@ function clockTick() {
   flagTick();
 
   if (tickFlag % 1 === 0) {
+    refreshTimeString();
     saveCurrentState();
     highlightCurrentHabit();
     refreshIdeas();
