@@ -143,6 +143,7 @@ function refreshTimeString(){
   currentMinute = now.getMinutes();
   nearestHalfHour = currentMinute >= 30 ? 30 : 0;
   currentTimeString = `${currentHour.toString().padStart(2, '0')}:${nearestHalfHour.toString().padStart(2, '0')}`;
+  console.log(currentTimeString);
 }
 
 function initClock() {
